@@ -1,0 +1,8 @@
+Package: com.custom.browser.appletv
+Name: Browser
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Web Browser for Apple TV 3
+Maintainer: Artur
+Author: Artur
+Section: Applications

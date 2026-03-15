@@ -1,0 +1,8 @@
+Package: com.custom.simpleapp
+Name: Simple App
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Simple App for Apple TV 3
+Maintainer: Artur
+Author: Artur
+Section: Applications

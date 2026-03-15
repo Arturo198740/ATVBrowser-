@@ -1,0 +1,30 @@
+GO_EASY_ON_ME=1
+export DEBUG=1
+export SDKVERSION=9.3
+TARGET := iphone:clang:9.3:8.4
+THEOS_DEVICE_IP=192.168.1.127
+
+include theos/makefiles/common.mk
+
+BUNDLE_NAME = Browser
+Browser_FILES = Classes/BrowserAppliance.xm Classes/BrowserController.xm Classes/BrowserWebView.xm
+Browser_INSTALL_PATH = /Applications/Lowtide.app/Appliances
+Browser_BUNDLE_EXTENSION = frappliance
+Browser_LDFLAGS = -undefined dynamic_lookup
+Browser_FRAMEWORKS = UIKit CoreGraphics
+
+include $(FW_MAKEDIR)/bundle.mk
+
+Browser_PATH = $(FW_STAGING_DIR)$(Browser_INSTALL_PATH)/$(BUNDLE_NAME).$(Browser_BUNDLE_EXTENSION)/$(BUNDLE_NAME)
+
+after-Browser-stage:: 
+	mkdir -p $(FW_STAGING_DIR)/Applications/AppleTV.app/Appliances
+	ln -f -s /Applications/Lowtide.app/Appliances/Browser.frappliance $(FW_STAGING_DIR)/Applications/AppleTV.app/Appliances/
+	$(FAKEROOT) chown -R root:wheel $(FW_STAGING_DIR)
+	$(PREFIX)dsymutil $(Browser_PATH) -o $(BUNDLE_NAME).dSYM
+	cp $(Browser_PATH) $(BUNDLE_NAME)_unstripped
+	$(PREFIX)strip -x $(Browser_PATH)
+	$(_THEOS_CODESIGN_COMMANDLINE) $(Browser_PATH)
+
+after-install::
+	install.exec "killall -9 AppleTV"
